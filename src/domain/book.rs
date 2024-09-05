@@ -19,11 +19,11 @@ impl Book {
     self.loc_for.is_some()
   }
 
-  pub fn rm_loc(&mut self) {
+  pub fn rm_renter(&mut self) {
     self.loc_for = None;
   }
 
-  pub fn add_loc(&mut self, usr_id: u32) {
+  pub fn add_renter(&mut self, usr_id: u32) {
     self.loc_for = Some(usr_id);
   }
 }
