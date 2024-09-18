@@ -6,7 +6,7 @@ pub struct Book {
   pub id: Uuid, // Autogenerate
   pub title: String,
   pub author: String,
-  pub loc_for: Option<u32>  // User id 
+  pub loc_for: Option<Uuid>  // User id 
 }
 
 impl Book {
@@ -23,7 +23,7 @@ impl Book {
     self.loc_for = None;
   }
 
-  pub fn add_renter(&mut self, usr_id: u32) {
+  pub fn add_renter(&mut self, usr_id: Uuid) {
     self.loc_for = Some(usr_id);
   }
 }
