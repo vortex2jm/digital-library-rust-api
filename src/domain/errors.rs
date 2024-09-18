@@ -3,6 +3,7 @@ pub enum DomainError {
     BookNotFound,
     UserNotFound,
     BookNotAvailable,
+    BookNotRentedByUser,
     LockError,
 }
 
