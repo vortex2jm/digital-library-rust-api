@@ -10,13 +10,13 @@ pub struct Book {
 }
 
 impl Book {
-  fn new(title: String, author: String) -> Self {
+  pub fn new(title: String, author: String) -> Self {
     let id = Uuid::new_v4();
     Book { id, title, author, loc_for: None }
   }
 
   pub fn is_available(&self) -> bool {
-    self.loc_for.is_some()
+    self.loc_for.is_none()
   }
 
   pub fn rm_renter(&mut self) {

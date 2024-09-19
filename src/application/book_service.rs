@@ -1,12 +1,30 @@
-use crate::domain::{book::Book, errors::DomainError, traits::BookRepository};
 use uuid::Uuid;
 
-pub struct BookService<B: BookRepository> {
-  book_repository: B,
+use crate::domain::{traits::BookRepository, errors::DomainError};
+use crate::domain::book::Book;
+
+pub struct BookService<R: BookRepository> {
+    book_repository: R,
 }
 
-impl <B: BookRepository> BookService<B> {
-  pub fn get_book(&self, id: &Uuid) -> Result<Option<Book>, DomainError> {
-    self.book_repository.find_book_by_id(*id)
-  }
-} 
+impl<R: BookRepository> BookService<R> {
+    pub fn new(book_repository: R) -> Self {
+        Self { book_repository }
+    }
+
+    pub fn add_book(&self, book: Book) -> Result<(), DomainError> {
+        self.book_repository.save_book(&book)
+    }
+
+    pub fn get_book_by_id(&self, id: Uuid) -> Result<Option<Book>, DomainError> {
+        self.book_repository.find_book_by_id(id)
+    }
+
+    pub fn get_all_books(&self) -> Result<Vec<Book>, DomainError> {
+        self.book_repository.find_all_books()
+    }
+
+    pub fn remove_book_by_id(&self, id: Uuid) -> Result<(), DomainError> {
+        self.book_repository.del_book_by_id(id)
+    }
+}

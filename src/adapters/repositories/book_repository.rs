@@ -37,7 +37,7 @@ impl BookRepository for InMemoryBookRepository {
         Ok(())
   }
 
-  fn del_book(&self, id: Uuid) -> Result<(), DomainError> {
+  fn del_book_by_id(&self, id: Uuid) -> Result<(), DomainError> {
       let mut books = self
         .books
         .write()
@@ -47,4 +47,9 @@ impl BookRepository for InMemoryBookRepository {
       books.remove(&id);
       Ok(())
   }
+
+  fn find_all_books(&self) -> Result<Vec<Book>, DomainError> {
+    let books = self.books.read().map_err(|_| DomainError::LockError)?;
+    Ok(books.values().cloned().collect())  // Converte os valores do HashMap em um Vec<Book>
+}
 }
