@@ -1,4 +1,4 @@
-use crate::domain::traits::{ BookRepository, UserRepository };
+use crate::domain::traits::BookRepository;
 use crate::domain::errors::DomainError;
 use crate::domain::book::Book;
 use std::collections::HashMap;
@@ -48,7 +48,7 @@ impl BookRepository for InMemoryBookRepository {
       Ok(())
   }
 
-  fn find_all_books(&self) -> Result<Vec<Book>, DomainError> {
+  fn get_all_books(&self) -> Result<Vec<Book>, DomainError> {
     let books = self.books.read().map_err(|_| DomainError::LockError)?;
     Ok(books.values().cloned().collect())  // Converte os valores do HashMap em um Vec<Book>
 }
