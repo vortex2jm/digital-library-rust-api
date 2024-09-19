@@ -2,7 +2,7 @@ use super::{ book::Book, errors::DomainError, user::User };
 use uuid::Uuid;
 
 pub trait BookRepository {
-  fn save_book(&self, book: &Book) -> Result<(), DomainError>;
+  fn save_book(&self, book: &Book) -> Result<Uuid, DomainError>;
   fn find_book_by_id(&self, id: Uuid) -> Result<Option<Book>, DomainError>;
   fn get_all_books(&self) -> Result<Vec<Book>, DomainError>;
   fn del_book_by_id(&self, id: Uuid) -> Result<(), DomainError>;  

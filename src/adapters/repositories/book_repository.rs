@@ -10,7 +10,7 @@ pub struct InMemoryBookRepository {
 }
 
 impl InMemoryBookRepository {
-  fn new() -> Self {
+  pub fn new() -> Self {
     InMemoryBookRepository { books: RwLock::new(HashMap::new()) }
   }
 }
@@ -26,7 +26,7 @@ impl BookRepository for InMemoryBookRepository {
       Ok(books.get(&id).cloned()) // Returns a copy, but could returns a reference
   }
 
-  fn save_book(&self, book: &Book) -> Result<(), DomainError> {
+  fn save_book(&self, book: &Book) -> Result<Uuid, DomainError> {
       let mut books = self
         .books
         .write()
@@ -34,7 +34,7 @@ impl BookRepository for InMemoryBookRepository {
         DomainError::LockError
       })?;
         books.insert(book.id.clone(), book.clone());   // Saves a copy
-        Ok(())
+        Ok(book.id.clone())
   }
 
   fn del_book_by_id(&self, id: Uuid) -> Result<(), DomainError> {
