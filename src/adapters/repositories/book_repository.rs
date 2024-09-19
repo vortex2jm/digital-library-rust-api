@@ -1,4 +1,4 @@
-use crate::domain::traits::{ BookRepository, UserRepository };
+use crate::domain::traits::BookRepository;
 use crate::domain::errors::DomainError;
 use crate::domain::book::Book;
 use std::collections::HashMap;
@@ -10,7 +10,7 @@ pub struct InMemoryBookRepository {
 }
 
 impl InMemoryBookRepository {
-  fn new() -> Self {
+  pub fn new() -> Self {
     InMemoryBookRepository { books: RwLock::new(HashMap::new()) }
   }
 }
@@ -26,7 +26,7 @@ impl BookRepository for InMemoryBookRepository {
       Ok(books.get(&id).cloned()) // Returns a copy, but could returns a reference
   }
 
-  fn save_book(&self, book: &Book) -> Result<(), DomainError> {
+  fn save_book(&self, book: &Book) -> Result<Uuid, DomainError> {
       let mut books = self
         .books
         .write()
@@ -34,7 +34,7 @@ impl BookRepository for InMemoryBookRepository {
         DomainError::LockError
       })?;
         books.insert(book.id.clone(), book.clone());   // Saves a copy
-        Ok(())
+        Ok(book.id.clone())
   }
 
   fn del_book_by_id(&self, id: Uuid) -> Result<(), DomainError> {
@@ -48,7 +48,7 @@ impl BookRepository for InMemoryBookRepository {
       Ok(())
   }
 
-  fn find_all_books(&self) -> Result<Vec<Book>, DomainError> {
+  fn get_all_books(&self) -> Result<Vec<Book>, DomainError> {
     let books = self.books.read().map_err(|_| DomainError::LockError)?;
     Ok(books.values().cloned().collect())  // Converte os valores do HashMap em um Vec<Book>
 }

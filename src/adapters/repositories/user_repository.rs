@@ -1,5 +1,5 @@
 use crate::domain::traits::UserRepository;
-use crate::domain::user::{self, User};
+use crate::domain::user::User;
 use crate::domain::errors::DomainError;
 use std::collections::HashMap;
 use std::sync::RwLock;
@@ -16,6 +16,18 @@ impl InMemoryUserRepository {
 }
 
 impl UserRepository for InMemoryUserRepository {
+  
+  fn save_user(&self, user: &User) -> Result<(), DomainError> {
+    let mut users = self
+      .users
+      .write()
+      .map_err(|_| {
+        DomainError::LockError
+      })?;
+    users.insert(user.id.clone(), user.clone());
+    Ok(())
+  }
+  
   fn find_user_by_id(&self, id: Uuid) -> Result<Option<User>, DomainError> {
     let users = self
       .users
@@ -37,18 +49,12 @@ impl UserRepository for InMemoryUserRepository {
     Ok(user.cloned())
   }
 
-  fn save_user(&self, user: User) -> Result<(), DomainError> {
-    let mut users = self
-      .users
-      .write()
-      .map_err(|_| {
-        DomainError::LockError
-      })?;
-    users.insert(user.id, user);
-    Ok(())
+  fn get_all_users(&self) -> Result<Vec<User>, DomainError> {
+    let users = self.users.read().map_err(|_| DomainError::LockError)?;
+    Ok(users.values().cloned().collect())
   }
 
-  fn del_user(&self, cpf: String) -> Result<(), DomainError> {
+  fn del_user_by_cpf(&self, cpf: String) -> Result<(), DomainError> {
     let mut users = self
       .users
       .write()
