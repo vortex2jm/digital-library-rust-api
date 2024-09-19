@@ -18,4 +18,8 @@ impl User {
   pub fn rent_book(&mut self, book_id: Uuid) {
     self.loc_books.push(book_id);
   }
+  
+  pub fn return_book(&mut self, book_id: Uuid) {
+    self.loc_books.retain(|&id| id != book_id);
+  }
 }
