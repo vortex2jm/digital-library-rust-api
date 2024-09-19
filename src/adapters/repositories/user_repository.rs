@@ -10,14 +10,14 @@ pub struct InMemoryUserRepository {
 }
 
 impl InMemoryUserRepository {
-  fn new() -> Self {
+  pub fn new() -> Self {
     InMemoryUserRepository { users: RwLock::new(HashMap::new()) }
   }
 }
 
 impl UserRepository for InMemoryUserRepository {
   
-  fn save_user(&self, user: &User) -> Result<(), DomainError> {
+  fn save_user(&self, user: &User) -> Result<Uuid, DomainError> {
     let mut users = self
       .users
       .write()
@@ -25,7 +25,7 @@ impl UserRepository for InMemoryUserRepository {
         DomainError::LockError
       })?;
     users.insert(user.id.clone(), user.clone());
-    Ok(())
+    Ok(user.id.clone())
   }
   
   fn find_user_by_id(&self, id: Uuid) -> Result<Option<User>, DomainError> {
@@ -54,19 +54,13 @@ impl UserRepository for InMemoryUserRepository {
     Ok(users.values().cloned().collect())
   }
 
-  fn del_user_by_cpf(&self, cpf: String) -> Result<(), DomainError> {
+  fn del_user_by_id(&self, id: Uuid) -> Result<(), DomainError> {
     let mut users = self
       .users
       .write()
       .map_err(|_| {
         DomainError::LockError
       })?;
-    let user = users.values().find(|u| u.cpf == cpf);
-    // If user is not found, return an error. Necessary cause unwrap() is used and it can panic.
-    if user.is_none() {
-      return Err(DomainError::UserNotFound);
-    }
-    let id = user.unwrap().id;
     users.remove(&id);
     Ok(())
   }

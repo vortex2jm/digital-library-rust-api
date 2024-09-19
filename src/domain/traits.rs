@@ -9,9 +9,9 @@ pub trait BookRepository {
 }
 
 pub trait UserRepository {
-  fn save_user(&self, user: &User) -> Result<(), DomainError>;
+  fn save_user(&self, user: &User) -> Result<Uuid, DomainError>;
   fn find_user_by_id(&self, id: Uuid) -> Result<Option<User>, DomainError>;
   fn find_user_by_cpf(&self, cpf: String) -> Result<Option<User>, DomainError>;
   fn get_all_users(&self) -> Result<Vec<User>, DomainError>;
-  fn del_user_by_cpf(&self, cpf: String) -> Result<(), DomainError>;
+  fn del_user_by_id(&self, id: Uuid) -> Result<(), DomainError>;
 }

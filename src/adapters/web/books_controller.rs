@@ -4,11 +4,7 @@ use crate::application::dto::BookDTO;
 use crate::domain::errors::DomainError;
 use actix_web::web::Data;
 use uuid::Uuid;
-
-#[derive(serde::Serialize)]
-struct Response {
-  message: String
-}
+use super::http_config::Response;
 
 #[post("/book")]
 pub async fn add_book(
