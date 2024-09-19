@@ -5,14 +5,15 @@ use uuid::Uuid;
 pub struct User {
   pub id: Uuid, // Autogenerate
   pub name: String,
+  pub mail: String,
   pub cpf: String,
   pub loc_books: Vec<Uuid> // Book id's
 }
 
 impl User {
-  fn new(name: String, cpf: String) -> Self {
+  pub fn new(name: String, mail: String, cpf: String) -> Self {
     let id = Uuid::new_v4();
-    User { id, name, cpf, loc_books: vec![]}
+    User { id, name, mail, cpf, loc_books: vec![]}
   }
 
   pub fn rent_book(&mut self, book_id: Uuid) {
